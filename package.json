@@ -1,0 +1,35 @@
+{
+  "author": "Jurek Błaszczyk (http://solubis.com)",
+  "name": "javascipt-advanced-tests",
+  "description": "A test-driven assessment of JavaScript skills",
+  "version": "0.3.0",
+  "homepage": "http://solubis.com",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/"
+  },
+  "engines": {
+    "node": "0.12.x"
+  },
+  "dependencies": {
+    "chai": "^2.3.0",
+    "eslint": "*",
+    "expect.js": "0.1.2",
+    "jasmine": "^2.4.1",
+    "jquery": "^1.11.0",
+    "mocha": "^2.2.4",
+    "ts-loader": "*",
+    "typescript": "^1.6.2",
+    "webpack": "^1.12.9",
+    "webpack-dev-server": "^1.14.0"
+  },
+  "scripts": {
+    "start": "node_modules/webpack-dev-server/bin/webpack-dev-server.js",
+    "test": "mocha -R spec 'tests'"
+  },
+  "bugs": {
+    "url": "https://github.com/"
+  },
+  "private": true,
+  "devDependencies": {}
+}
