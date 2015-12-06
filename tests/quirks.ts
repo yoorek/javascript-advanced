@@ -30,22 +30,26 @@ describe('quirks', () => {
         }
     });
 
-    it('typeof is used to identify the type of value inside a variable or expression', function() {
-        expect(typeof true).to.equal('boolean');
-        expect(typeof 'String').to.equal('string');
-        expect(typeof 100).to.equal('number');
-        expect(typeof undefined).to.equal('undefined');
-        expect(typeof null).to.equal('object');
-        expect(typeof function(){}).to.equal('function');
+    it('parseInt() looks for the first available integer at the front of a string', function() {
+        expect(parseInt('55')).to.equal(55);
+        expect(parseInt('55 is a great number')).to.equal(55);
     });
 
-    it('toString() function returns the string representation of the variable (primitves borrow from Object)', function() {
-        expect(true.toString()).to.equal('true');
-        expect('String'.toString()).to.equal('String');
-        let number = 100;
-        expect(number.toString()).to.equal('100');
-        expect(String(number)).to.equal('100');
+    it('if parseInt() does not find an acceptable value at the beginning of a string, it will return a NaN', function() {
+        expect(isNaN(parseInt('A great number, 55'))).to.be.true;
     });
 
+    it('parseInt() will trim off any decimals that may exist, without rounding', function() {
+        expect(parseInt('5.78')).to.equal(5);
+    });
+
+    it('parseInt() will accept octal,hexadecimal and decimal values potentially creating undesired results', function() {
+        // '021' is read as an octal value(base 8) and converts it to decimal
+        expect(parseInt('021')).to.equal(21);// This is fixed on ECMAScript5 in ES3 == 17
+    });
+    it('you can use a radix value to ensure correct parsing', function() {
+        // parseInt will accept any radix value from 2-36 for selecting the Base for the result
+        expect(parseInt('021', 10)).to.equal(21);
+    });
 
 });

@@ -113,6 +113,23 @@ describe('inheritance', function() {
         expect(child.__proto__).to.equal(ChildConstructor.prototype);
     });
 
+    it('you can use hasOwnProperty to identify the property location', function() {
+
+        function Person(firstName) {
+            this.firstName = firstName;
+        }
+
+        Person.prototype.lastName = function() {
+            return 'Chavez';
+        };
+
+        let person = new Person('Martin');
+
+        expect(person.hasOwnProperty('lastName')).to.be.false;
+        expect(person.constructor.prototype.hasOwnProperty('lastName')).to.be.true;
+        expect(person.__proto__.hasOwnProperty('lastName')).to.be.true;
+    });
+
 
 });
 
@@ -129,7 +146,7 @@ function extend(target, source) {
 
 function inherits(SubC, SuperC) {
     let subProto = Object.create(SuperC.prototype);
-    // At the very least, we keep the "constructor" property
+    // At the very least, we keep the 'constructor' property
     // At most, we preserve additions that have already been made
     // to allow 'inherits' after constructing subprototype
     extend(subProto, SubC.prototype);
