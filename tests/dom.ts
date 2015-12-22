@@ -15,47 +15,51 @@ describe('General Performance Concepts', function() {
   */
 
     /*DOM Manipulation*/
-    it('Adding individual DOM Elements is a bad practice due to reflow', function() {
-        let ulDomElement = document.createElement('ul');
-        let contentOfLiElements = ['1', '2', '3'];
 
-        for (let index = 0; index < contentOfLiElements.length; index++) {
-            let liElement = document.createElement('li');
-            liElement.appendChild(document.createTextNode(contentOfLiElements[index]));
-            // Each time the list is appended, we access the DOM and cause an entire document reflow
-            ulDomElement.appendChild(liElement);
-        }
-    });
+    if (typeof document !== 'undefined') {
+        it('Adding individual DOM Elements is a bad practice due to reflow', function() {
+            let ulDomElement = document.createElement('ul');
+            let contentOfLiElements = ['1', '2', '3'];
 
-    it('Use a document Fragment to insert additions all at once', function() {
-        // Fragments are invisible containers that hold multiple DOM elements without being a node itself
-        let ulDomElement = document.createElement('ul');
-        let contentOfLiElements = ['1', '2', '3'];
+            for (let index = 0; index < contentOfLiElements.length; index++) {
+                let liElement = document.createElement('li');
+                liElement.appendChild(document.createTextNode(contentOfLiElements[index]));
+                // Each time the list is appended, we access the DOM and cause an entire document reflow
+                ulDomElement.appendChild(liElement);
+            }
+        });
 
-        let fragment = document.createDocumentFragment();
-        for (let index = 0; index < contentOfLiElements.length; index++) {
-            let liElement = document.createElement('li');
-            liElement.appendChild(document.createTextNode(contentOfLiElements[index]));
-            fragment.appendChild(liElement); // There is no document reflow at this point
-        }
-        // There is only one document reflow on this program
-        ulDomElement.appendChild(fragment);
-    });
+        it('Use a document Fragment to insert additions all at once', function() {
+            // Fragments are invisible containers that hold multiple DOM elements without being a node itself
+            let ulDomElement = document.createElement('ul');
+            let contentOfLiElements = ['1', '2', '3'];
 
-    it('Declare letiables as few times as possible', function() {
-        // Every let keyword adds a look-up for the JavaScript parser that can be avoided with comma extensions
-        let ulDomElement = document.createElement('ul'),
-            contentOfLiElements = ['1', '2', '3'],
-            fragment = document.createDocumentFragment(),
-            liElement;
-        // Anticipate letiable needs to avoid the processor burden of creating a new let each time
-        for (let index = 0; index < contentOfLiElements.length; index++) {
-            liElement = document.createElement('li');
-            liElement.appendChild(document.createTextNode(contentOfLiElements[index]));
-            fragment.appendChild(liElement);
-        }
-        ulDomElement.appendChild(fragment);
-    });
+            let fragment = document.createDocumentFragment();
+            for (let index = 0; index < contentOfLiElements.length; index++) {
+                let liElement = document.createElement('li');
+                liElement.appendChild(document.createTextNode(contentOfLiElements[index]));
+                fragment.appendChild(liElement); // There is no document reflow at this point
+            }
+            // There is only one document reflow on this program
+            ulDomElement.appendChild(fragment);
+        });
+
+        it('Declare letiables as few times as possible', function() {
+            // Every let keyword adds a look-up for the JavaScript parser that can be avoided with comma extensions
+            let ulDomElement = document.createElement('ul'),
+                contentOfLiElements = ['1', '2', '3'],
+                fragment = document.createDocumentFragment(),
+                liElement;
+            // Anticipate letiable needs to avoid the processor burden of creating a new let each time
+            for (let index = 0; index < contentOfLiElements.length; index++) {
+                liElement = document.createElement('li');
+                liElement.appendChild(document.createTextNode(contentOfLiElements[index]));
+                fragment.appendChild(liElement);
+            }
+            ulDomElement.appendChild(fragment);
+        });
+
+    }
 
     it('you can use time and timeEnd to measure the performance of functions in an easy manner', function() {
         // Be aware that the creation of the console.time object is time consuming and it adds to the total elapsed time

@@ -9,6 +9,34 @@ describe('quirks', () => {
         expect(a - 1).to.equal(11);
     });
 
+    it('lenient comparing object to nonobject', () => {
+        expect({} == '[object Object]').to.be.true;
+        expect(['123'] == 123).to.be.true;
+        expect([] == 0).to.be.true;
+        expect([] == ![]).to.be.true;
+    });
+
+    it('typeof null === object', () => {
+        expect(typeof null).to.equal('object');
+    });
+
+    it('coersion to built in contructors ', () => {
+        let a = new Number(1);
+
+        expect(a == 1).to.be.true;
+        expect(a === 1).to.be.false;
+        expect(a instanceof Number).to.be.true;
+        expect(a['__proto__'].constructor).to.equal(Number);
+
+        // expect((3) instanceof Number).to.be.false;
+        expect((3)['__proto__'].constructor).to.equal(Number);
+    });
+
+    it('not found variable check', () => {
+        // if (notfound) ==> ReferenceError
+        // expect(typeof notfound).to.equal('undefined');
+    });
+
     it('NaN !== NaN', () => {
         expect(NaN === NaN).to.be.false;
     });
@@ -30,6 +58,8 @@ describe('quirks', () => {
         }
     });
 
+    /* tslint:disable:radix */
+
     it('parseInt() looks for the first available integer at the front of a string', function() {
         expect(parseInt('55')).to.equal(55);
         expect(parseInt('55 is a great number')).to.equal(55);
@@ -45,8 +75,9 @@ describe('quirks', () => {
 
     it('parseInt() will accept octal,hexadecimal and decimal values potentially creating undesired results', function() {
         // '021' is read as an octal value(base 8) and converts it to decimal
-        expect(parseInt('021')).to.equal(21);// This is fixed on ECMAScript5 in ES3 == 17
+        expect(parseInt('021')).to.equal(21); // This is fixed on ECMAScript5 in ES3 == 17
     });
+
     it('you can use a radix value to ensure correct parsing', function() {
         // parseInt will accept any radix value from 2-36 for selecting the Base for the result
         expect(parseInt('021', 10)).to.equal(21);

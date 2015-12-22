@@ -39,16 +39,33 @@ describe('inheritance', function() {
 
         expect(childLiteral.getParentProperty).to.be.undefined;
 
-        childLiteral.__proto__ = Object.create(parentLiteral);
+        childLiteral.__proto__ = parentLiteral;
 
         expect(childLiteral.getParentProperty()).to.equal('child');
 
         let childLiteral2: any = {};
 
-        Object.setPrototypeOf(childLiteral2, Object.create(parentLiteral));
+        Object.setPrototypeOf(childLiteral2, parentLiteral);
 
         expect(childLiteral2.getParentProperty()).to.equal('parent');
 
+    });
+
+    it('inherit using Object.create (has to add properties one by one or use Extend function)', () => {
+        let parentLiteral: any = {
+            parentProperty: 'parent',
+            getParentProperty: function() {
+                return this.parentProperty;
+            }
+        };
+
+        let childLiteral = Object.create(parentLiteral);
+
+        expect(childLiteral.getParentProperty()).to.equal('parent');
+        expect(childLiteral['__proto__']).to.equal(parentLiteral);
+
+        expect(childLiteral.hasOwnProperty('parentProperty')).to.be.false;
+        expect(childLiteral.__proto__.hasOwnProperty('parentProperty')).to.be.true;
     });
 
 
@@ -74,6 +91,7 @@ describe('inheritance', function() {
 
         function ParentConstructor(parentProperty) {
             this.parentProperty = parentProperty || 'default';
+            this.array = [];
         }
 
         ParentConstructor.prototype.getParentProperty = function() {
@@ -87,17 +105,32 @@ describe('inheritance', function() {
         expect(ParentConstructor['__proto__'] = Function.prototype);
 
         function ChildConstructor(parentProperty, childProperty) {
-            ParentConstructor.call(this, parentProperty);
-
+            ParentConstructor.call(this);
             this.childProperty = childProperty;
         }
 
+        // DON'T USE
         ChildConstructor.prototype = ParentConstructor.prototype;
-        ChildConstructor.prototype.badPropertyAlsoInParent = 'bad';
+        ChildConstructor.prototype.shouldBeOnlyInChild = 'bad';
 
-        expect(ParentConstructor.prototype.badPropertyAlsoInParent).to.equal('bad');
+        let p = new ParentConstructor('parent');
 
+        expect(p.shouldBeOnlyInChild).to.equal('bad');
+
+        // DON'T USE
         ChildConstructor.prototype = new ParentConstructor('test');
+
+        let c1 = new ChildConstructor('p', 'c1');
+
+        expect(c1.hasOwnProperty('parentProperty')).to.be.true;
+        expect(c1.__proto__.hasOwnProperty('parentProperty')).to.be.true;
+
+        c1.array.push('1');
+
+        let c2 = new ChildConstructor('p', 'c2');
+
+        // Error - c2 shares properties with c1 ONLY good because calling super constructo
+        expect(c2.array[0]).to.be.undefined;
 
         expect(ChildConstructor.prototype.parentProperty).to.be.equal('test');
 
@@ -107,7 +140,8 @@ describe('inheritance', function() {
 
         let child: any = new ChildConstructor('parentProperty', 'childProperty');
 
-        expect(child.getParentProperty()).to.equal('parentProperty');
+        expect(child.hasOwnProperty('parentProperty')).to.be.true;
+        expect(child.__proto__.hasOwnProperty('parentProperty')).to.be.false;
         expect(child.childProperty).to.equal('childProperty');
 
         expect(child.__proto__).to.equal(ChildConstructor.prototype);
@@ -130,6 +164,27 @@ describe('inheritance', function() {
         expect(person.__proto__.hasOwnProperty('lastName')).to.be.true;
     });
 
+    it('returning value from constructors', () => {
+        function Person(name) {
+            this.name = name;
+        }
+
+        let p = new Person('Joe');
+
+        expect(p.name).to.equal('Joe');
+        expect(p instanceof Person).to.be.true;
+
+        function Man(name) {
+            return {
+                name: name
+            };
+        }
+
+        /* let m = new Man('Joe');
+        
+        expect(m.name).to.equal('Joe');
+        expect(m instanceof Man).to.be.false; */
+    });
 
 });
 

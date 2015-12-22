@@ -21,7 +21,14 @@ describe('types', () => {
         expect(String(number)).to.equal('100');
     });
 
-
+    it('Lenient == comparison of Built In Constructor types', () => {
+        expect('abc' == new String('abc')).to.be.true;
+        expect('abc' == String('abc')).to.be.true;
+        expect(String('abc') == String('abc')).to.be.true;
+        expect(typeof String('abc')).to.equal('string');
+        expect(typeof new String('abc')).to.equal('object');
+        expect(new String('abc') == new String('abc')).to.be.false;
+    });
 
 });
 

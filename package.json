@@ -24,8 +24,8 @@
     "webpack-dev-server": "^1.14.0"
   },
   "scripts": {
-    "start": "node_modules/webpack-dev-server/bin/webpack-dev-server.js",
-    "test": "mocha -R spec 'tests'"
+    "start": "node_modules/webpack-dev-server/bin/webpack-dev-server.js --port 3000 --inline --hot",
+    "test": "tsc; mocha -R spec 'temp'"
   },
   "bugs": {
     "url": "https://github.com/"

@@ -5,7 +5,7 @@ var webpack = require('webpack');
 module.exports = {
     entry: [
         './tests/index.ts',
-        'webpack-dev-server/client?http://localhost:8080'
+        'webpack-dev-server/client?http://localhost:3000'
     ],
     output: {
         publicPath: '/',
